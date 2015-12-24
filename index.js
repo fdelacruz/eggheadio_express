@@ -53,7 +53,7 @@ app.get('/users/by/:gender', function (req, res) {
 
 	readable
 		.pipe(JSONStream.parse('*', function (user) {
-			if (user.gender === gender) return user;
+			if (user.gender === gender) return user.name;
 		}))
 		.pipe(JSONStream.stringify('[\n ', ',\n ', '\n]\n'))
 		.pipe(res);
