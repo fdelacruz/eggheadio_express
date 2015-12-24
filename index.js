@@ -42,8 +42,8 @@ app.get('*.json', function (req, res) {
 
 app.get('/data/:username', function (req, res) {
 	var username = req.params.username;
-	var user = helpers.getUser(username);
-	res.json(user);
+	var readable = fs.createReadStream('./users/' + username + '.json');
+	readable.pipe(res);
 });
 
 app.get('/error/:username', function (req, res) {
