@@ -4,10 +4,10 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
 var engines = require('consolidate');
-
 var JSONStream = require('JSONStream');
-
 var bodyParser = require('body-parser');
+
+var User = require('./db').User;
 
 app.engine('hbs', engines.handlebars);
 
@@ -22,19 +22,9 @@ app.get('/favicon.ico', function (req, res) {
 });
 
 app.get('/', function (req, res) {
- var users = [];
-  fs.readdir('users', function (err, files) {
-		if (err) throw err;
-    files.forEach(function (file) {
-      fs.readFile(path.join(__dirname, 'users', file), {encoding: 'utf8'}, function (err, data) {
-				if (err) throw err;
-        var user = JSON.parse(data);
-        user.name.full = _.startCase(user.name.first + ' ' + user.name.last);
-        users.push(user);
-        if (users.length === files.length) res.render('index', {users: users});
-      });
-    });
-  });
+	User.find({}, function (err, users) {
+		res.render('index', {users: users});
+	});
 });
 
 app.get('*.json', function (req, res) {
